@@ -1,0 +1,2 @@
+Local onde tem sugestões de organização de pastas
+github.com/golang-standards/project-layout
