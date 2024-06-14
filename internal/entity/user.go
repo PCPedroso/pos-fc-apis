@@ -12,6 +12,10 @@ type User struct {
 	Password string    `json:"-"`
 }
 
+func (user *User) TableName() string {
+	return "users"
+}
+
 func NewUser(name, email, password string) (*User, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {

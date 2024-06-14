@@ -5,8 +5,6 @@ import (
 
 	"github.com/PCPedroso/pos-fc-apis/internal/entity"
 	"github.com/stretchr/testify/assert"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
 
 var _user = entity.User{
@@ -15,19 +13,8 @@ var _user = entity.User{
 	Password: "654641",
 }
 
-func ConectaDB() (*gorm.DB, error) {
-	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
-	if err != nil {
-		return nil, err
-	}
-
-	db.AutoMigrate(&entity.User{})
-
-	return db, nil
-}
-
 func TestCreateUser(t *testing.T) {
-	db, err := ConectaDB()
+	db, err := ConectaDB(&entity.User{})
 	if err != nil {
 		t.Error(err)
 	}
@@ -47,7 +34,7 @@ func TestCreateUser(t *testing.T) {
 }
 
 func TestFindByEmail(t *testing.T) {
-	db, err := ConectaDB()
+	db, err := ConectaDB(&entity.User{})
 	if err != nil {
 		t.Error(err)
 	}
