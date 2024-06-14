@@ -9,10 +9,10 @@ import (
 
 var (
 	ErrIDIsRiquired    = errors.New("id is required")
-	ErrInvalidID       = errors.New("invalid id")
+	ErrIDIsInvalid     = errors.New("invalid id")
 	ErrNameIsRiquired  = errors.New("name is required")
 	ErrPriceIsRiquired = errors.New("price is required")
-	ErrInvalidPrice    = errors.New("invalid id")
+	ErrPriceIsInvalid  = errors.New("invalid id")
 )
 
 type Product struct {
@@ -43,7 +43,7 @@ func (p *Product) Validate() error {
 		return ErrIDIsRiquired
 	}
 	if _, err := entity.ParseID(p.ID.String()); err != nil {
-		return ErrInvalidID
+		return ErrIDIsInvalid
 	}
 	if p.Name == "" {
 		return ErrNameIsRiquired
@@ -52,7 +52,7 @@ func (p *Product) Validate() error {
 		return ErrPriceIsRiquired
 	}
 	if p.Price < 0 {
-		return ErrInvalidPrice
+		return ErrPriceIsInvalid
 	}
 	return nil
 }
