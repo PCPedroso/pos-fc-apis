@@ -2,7 +2,6 @@ package entity
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/PCPedroso/pos-fc-apis/pkg/entity"
@@ -25,10 +24,6 @@ type Product struct {
 
 func (product *Product) TableName() string {
 	return "products"
-}
-
-func (product *Product) NameSuffix(suffix string) string {
-	return fmt.Sprintf("%v %v", product.Name, suffix)
 }
 
 func NewProduct(name string, price float64) (*Product, error) {

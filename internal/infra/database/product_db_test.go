@@ -9,9 +9,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var _product = entity.Product{
+type _p struct {
+	Name  string
+	Price float64
+}
+
+var _product = _p{
 	Name:  "Produto",
 	Price: 10.0,
+}
+
+func (p _p) NameSuffix(s string) string {
+	return fmt.Sprintf("%v %v", p.Name, s)
 }
 
 func TestCreateProduct(t *testing.T) {
@@ -91,7 +100,7 @@ func TestUpdate(t *testing.T) {
 	db.Create(product)
 	productDB := NewProduct(db)
 
-	product.Name = product.NameSuffix("1")
+	product.Name = fmt.Sprintf("%v %v", product.Name, "1")
 	err = productDB.Update(product)
 	assert.Nil(t, err)
 
