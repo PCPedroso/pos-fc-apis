@@ -26,7 +26,7 @@ func NewUserHandler(db database.UserInterface, jwt *jwtauth.JWTAuth, jwtExpiresI
 }
 
 func (h *UserHandler) GetJwt(w http.ResponseWriter, r *http.Request) {
-	var user dto.UserJwtInput
+	var user dto.GenUserJwtInput
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)

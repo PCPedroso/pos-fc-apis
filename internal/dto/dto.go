@@ -11,7 +11,7 @@ type CreateUserInput struct {
 	Password string `json:"password"`
 }
 
-type UserJwtInput struct {
+type GenUserJwtInput struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
