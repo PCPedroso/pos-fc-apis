@@ -17,9 +17,7 @@ type ProductHandler struct {
 }
 
 func NewProductHandler(db database.ProductInterface) *ProductHandler {
-	return &ProductHandler{
-		ProductDB: db,
-	}
+	return &ProductHandler{ProductDB: db}
 }
 
 func (h *ProductHandler) Create(w http.ResponseWriter, r *http.Request) {
