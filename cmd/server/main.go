@@ -30,12 +30,14 @@ func main() {
 	productHandler := handlers.NewProductHandler(productDB)
 
 	userDB := database.NewUser(db)
-	userHandler := handlers.NewUserHandler(userDB, config.TokenAuth, config.JwtExpiresIn)
+	userHandler := handlers.NewUserHandler(userDB)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.WithValue("jwt", config.TokenAuth))
+	r.Use(middleware.WithValue("JwtExpiresIn", config.JwtExpiresIn))
 
-	// Produtos
 	r.Route("/products", func(r chi.Router) {
 		r.Use(jwtauth.Verifier(config.TokenAuth))
 		r.Use(jwtauth.Authenticator)
@@ -46,7 +48,6 @@ func main() {
 		r.Delete("/{id}", productHandler.Delete)
 	})
 
-	// Users
 	r.Route("/users", func(r chi.Router) {
 		r.Post("/", userHandler.Create)
 		r.Post("/gen_token", userHandler.GetJwt)
