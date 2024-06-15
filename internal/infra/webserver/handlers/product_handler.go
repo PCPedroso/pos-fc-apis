@@ -3,10 +3,12 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/PCPedroso/pos-fc-apis/internal/dto"
 	"github.com/PCPedroso/pos-fc-apis/internal/entity"
 	"github.com/PCPedroso/pos-fc-apis/internal/infra/database"
+	pkg_entity "github.com/PCPedroso/pos-fc-apis/pkg/entity"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -20,7 +22,7 @@ func NewProductHandler(db database.ProductInterface) *ProductHandler {
 	}
 }
 
-func (h *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
+func (h *ProductHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var product dto.CreateProductInput
 	err := json.NewDecoder(r.Body).Decode(&product)
 	if err != nil {
@@ -43,7 +45,7 @@ func (h *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func (h *ProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
+func (h *ProductHandler) FindByID(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	if id == "" {
 		w.WriteHeader(http.StatusBadRequest)
@@ -75,6 +77,12 @@ func (h *ProductHandler) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	product.ID, err = pkg_entity.ParseID(id)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	_, err = h.ProductDB.FindByID(id)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -87,4 +95,49 @@ func (h *ProductHandler) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *ProductHandler) Delete(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	_, err := h.ProductDB.FindByID(id)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	err = h.ProductDB.Delete(id)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *ProductHandler) FindAll(w http.ResponseWriter, r *http.Request) {
+	page, limit := 0, 0
+	sort := r.URL.Query().Get("sort")
+
+	if p, err := strconv.Atoi(r.URL.Query().Get("page")); err == nil {
+		page = p
+	}
+
+	if l, err := strconv.Atoi(r.URL.Query().Get("limit")); err == nil {
+		limit = l
+	}
+
+	products, err := h.ProductDB.FindAll(page, limit, sort)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(products)
 }

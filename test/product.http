@@ -8,17 +8,26 @@ Content-Type: application/json
 
 
 ###
+GET http://localhost:8080/products HTTP/1.1
 
+
+###
+GET http://localhost:8080/products?page=1&limit=3&sort=asc HTTP/1.1
+
+
+###
 GET  http://localhost:8080/products/028fcd30-6770-464a-b5a4-72712f228091 HTTP/1.1
 
 
 ###
-
 PUT  http://localhost:8080/products/028fcd30-6770-464a-b5a4-72712f228091 HTTP/1.1
 Content-Type: application/json
 
 {
-    "id" : "028fcd30-6770-464a-b5a4-72712f228091",
-    "name": "Produto alterado",
-    "price": 245
+    "name": "Produto 4 atualizado",
+    "price": 138
 }
+
+
+###
+DELETE http://localhost:8080/products/37935c69-a4c4-41a0-a2b9-8806449373af HTTP/1.1
