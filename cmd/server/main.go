@@ -9,6 +9,7 @@ import (
 	"github.com/PCPedroso/pos-fc-apis/internal/infra/webserver/handlers"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/jwtauth"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -33,14 +34,23 @@ func main() {
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
-	r.Post("/products", productHandler.Create)
-	r.Get("/products", productHandler.FindAll)
-	r.Get("/products/{id}", productHandler.FindByID)
-	r.Put("/products/{id}", productHandler.Update)
-	r.Delete("/products/{id}", productHandler.Delete)
 
-	r.Post("/users", userHandler.Create)
-	r.Post("/users/gen_token", userHandler.GetJwt)
+	// Produtos
+	r.Route("/products", func(r chi.Router) {
+		r.Use(jwtauth.Verifier(config.TokenAuth))
+		r.Use(jwtauth.Authenticator)
+		r.Post("/", productHandler.Create)
+		r.Get("/", productHandler.FindAll)
+		r.Get("/{id}", productHandler.FindByID)
+		r.Put("/{id}", productHandler.Update)
+		r.Delete("/{id}", productHandler.Delete)
+	})
+
+	// Users
+	r.Route("/users", func(r chi.Router) {
+		r.Post("/", userHandler.Create)
+		r.Post("/gen_token", userHandler.GetJwt)
+	})
 
 	http.ListenAndServe(":8080", r)
 }
