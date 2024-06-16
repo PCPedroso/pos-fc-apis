@@ -1,4 +1,97 @@
+basePath: /
+definitions:
+  dto.CreateUserInput:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+  dto.GenUserJwtInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  dto.GenUserJwtOutput:
+    properties:
+      access_token:
+        type: string
+    type: object
+  handlers.Error:
+    properties:
+      message:
+        type: string
+    type: object
+host: localhost:8080
 info:
-  contact: {}
-paths: {}
+  contact:
+    email: support@pcpedroso.com.br
+    name: API Support
+    url: http://www.pcpedroso.com.br
+  description: Product API with authentication.
+  license:
+    name: PCPedroso
+    url: http://www.pcpedroso.com.br
+  termsOfService: http://swagger.io/terms/
+  title: Go Expert API Example
+  version: "1.0"
+paths:
+  /users:
+    post:
+      consumes:
+      - application/json
+      description: Create User
+      parameters:
+      - description: user request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateUserInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Error'
+      summary: Create User
+      tags:
+      - users
+  /users/gen_token:
+    post:
+      consumes:
+      - application/json
+      description: Get User JWT
+      parameters:
+      - description: user credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GenUserJwtInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GenUserJwtOutput'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Error'
+      summary: Get User JWT
+      tags:
+      - users
 swagger: "2.0"

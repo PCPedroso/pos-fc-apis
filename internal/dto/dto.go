@@ -15,3 +15,7 @@ type GenUserJwtInput struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
+type GenUserJwtOutput struct {
+	AccessToken string `json:"access_token"`
+}
