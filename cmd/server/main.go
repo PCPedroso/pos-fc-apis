@@ -14,6 +14,23 @@ import (
 	"gorm.io/gorm"
 )
 
+// @title           Go Expert API Example
+// @version         1.0
+// @description     Product API with authentication.
+// @termsOfService  http://swagger.io/terms/
+
+// @contact.name   API Support
+// @contact.url    http://www.pcpedroso.com.br
+// @contact.email  support@pcpedroso.com.br
+
+// @license.name  PCPedroso
+// @license.url   http://www.pcpedroso.com.br
+
+// @host      localhost:8080
+// @BasePath  /
+// @in header
+// @name Authorization
+
 func main() {
 	config, err := configs.LoadConfig(".")
 	if err != nil {
