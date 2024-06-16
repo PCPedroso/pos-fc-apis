@@ -44,6 +44,8 @@ func (h *UserHandler) GetJwt(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		error := Error{Message: err.Error()}
+		json.NewEncoder(w).Encode(error)
 		return
 	}
 
@@ -57,6 +59,8 @@ func (h *UserHandler) GetJwt(w http.ResponseWriter, r *http.Request) {
 
 	if !u.ValidatePassword(user.Password) {
 		w.WriteHeader(http.StatusUnauthorized)
+		error := Error{Message: err.Error()}
+		json.NewEncoder(w).Encode(error)
 		return
 	}
 
@@ -86,6 +90,8 @@ func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		error := Error{Message: err.Error()}
+		json.NewEncoder(w).Encode(error)
 		return
 	}
 

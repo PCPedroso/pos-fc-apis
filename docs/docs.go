@@ -24,6 +24,240 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/products": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get all Products",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "List Products",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entity.Product"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create Product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Create Product",
+                "parameters": [
+                    {
+                        "description": "product request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateProductInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get Product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Get Product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Product"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Update Product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Update Product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "product request",
+                        "name": "param",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateProductInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete Product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Delete Product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "post": {
                 "description": "Create User",
@@ -109,6 +343,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.CreateProductInput": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                }
+            }
+        },
         "dto.CreateUserInput": {
             "type": "object",
             "properties": {
@@ -142,6 +387,23 @@ const docTemplate = `{
                 }
             }
         },
+        "entity.Product": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                }
+            }
+        },
         "handlers.Error": {
             "type": "object",
             "properties": {
@@ -149,6 +411,13 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`
